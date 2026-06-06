@@ -1,0 +1,536 @@
+db.sales.drop()
+true
+db.sales.insertMany([
+	{ "_id" : 1, "item" : "Americanos", "price" : 5, "size": "Short", "quantity" : 22, "date" : ISODate("2022-01-15T08:00:00Z") },
+	{ "_id" : 2, "item" : "Cappuccino", "price" : 6, "size": "Short","quantity" : 12, "date" : ISODate("2022-01-16T09:00:00Z") },
+	{ "_id" : 3, "item" : "Lattes", "price" : 15, "size": "Grande","quantity" : 25, "date" : ISODate("2022-01-16T09:05:00Z") },
+	{ "_id" : 4, "item" : "Mochas", "price" : 25,"size": "Tall", "quantity" : 11, "date" : ISODate("2022-02-17T08:00:00Z") },
+	{ "_id" : 5, "item" : "Americanos", "price" : 10, "size": "Grande","quantity" : 12, "date" : ISODate("2022-02-18T21:06:00Z") },
+	{ "_id" : 6, "item" : "Cappuccino", "price" : 7, "size": "Tall","quantity" : 20, "date" : ISODate("2022-02-20T10:07:00Z") },
+	{ "_id" : 7, "item" : "Lattes", "price" : 25,"size": "Tall", "quantity" : 30, "date" : ISODate("2022-02-21T10:08:00Z") },
+	{ "_id" : 8, "item" : "Americanos", "price" : 10, "size": "Grande","quantity" : 21, "date" : ISODate("2022-02-22T14:09:00Z") },
+	{ "_id" : 9, "item" : "Cappuccino", "price" : 10, "size": "Grande","quantity" : 17, "date" : ISODate("2022-02-23T14:09:00Z") },
+	{ "_id" : 10, "item" : "Americanos", "price" : 8, "size": "Tall","quantity" : 15, "date" : ISODate("2022-02-25T14:09:00Z")}
+]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': 1,
+    '1': 2,
+    '2': 3,
+    '3': 4,
+    '4': 5,
+    '5': 6,
+    '6': 7,
+    '7': 8,
+    '8': 9,
+    '9': 10
+  }
+}
+db.sales.getIndexes()
+[ { v: 2, key: { _id: 1 }, name: '_id_' } ]
+db.sales.find({ item: 'Americanos'}).explain('executionStats')
+{
+    maxScansToExplodeReached: false,
+    prunedSimilarIndexes: false,
+    winningPlan: {
+      isCached: false,
+      stage: 'COLLSCAN',
+      filter: {
+        item: {
+          '$eq': 'Americanos'
+        }
+      },
+      nss: 'Vitcampus.sales',
+      direction: 'forward'
+    },
+    rejectedPlans: []
+  },
+  executionStats: {
+    executionSuccess: true,
+    nReturned: 4,
+    executionTimeMillis: 20,
+    totalKeysExamined: 0,
+    totalDocsExamined: 10,
+    executionStages: {
+      isCached: false,
+      stage: 'COLLSCAN',
+      filter: {
+        item: {
+          '$eq': 'Americanos'
+        }
+      },
+      nReturned: 4,
+      executionTimeMillisEstimate: 0,
+      works: 11,
+      advanced: 4,
+      needTime: 6,
+      needYield: 0,
+      saveState: 0,
+      restoreState: 0,
+      isEOF: 1,
+      nss: 'Vitcampus.sales',
+      direction: 'forward',
+      docsExamined: 10
+    }
+  },
+  queryShapeHash: '6240B3D70E9934F45B9E14D6A8E8C3999EEB06C64909A21019ECB8D80E204DFD',
+  command: {
+    find: 'sales',
+    filter: {
+      item: 'Americanos'
+    },
+    '$db': 'Vitcampus'
+  },
+  serverInfo: {
+    host: 'Aditi2006',
+    port: 27017,
+    version: '8.3.2',
+    gitVersion: '89f54eb32e217d2f7bfcad50e5919f3033bb9611'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalQueryFrameworkControl: 'trySbeRestricted',
+    internalQueryPlannerIgnoreIndexWithCollationForRegex: 1
+  },
+  ok: 1
+}
+db.sales.createIndex({item:1})
+item_1
+db.sales.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { item: 1 }, name: 'item_1' }
+]
+db.sales.find({item:'Americanos'})
+{
+  _id: 1,
+  item: 'Americanos',
+  price: 5,
+  size: 'Short',
+  quantity: 22,
+  date: 2022-01-15T08:00:00.000Z
+}
+{
+  _id: 5,
+  item: 'Americanos',
+  price: 10,
+  size: 'Grande',
+  quantity: 12,
+  date: 2022-02-18T21:06:00.000Z
+}
+{
+  _id: 8,
+  item: 'Americanos',
+  price: 10,
+  size: 'Grande',
+  quantity: 21,
+  date: 2022-02-22T14:09:00.000Z
+}
+{
+  _id: 10,
+  item: 'Americanos',
+  price: 8,
+  size: 'Tall',
+  quantity: 15,
+  date: 2022-02-25T14:09:00.000Z
+}
+db.sales.find({ item: 'Americanos'}).explain('executionStats')
+      nss: 'Vitcampus.sales',
+      docsExamined: 4,
+      alreadyHasObj: 0,
+      inputStage: {
+        stage: 'IXSCAN',
+        nReturned: 4,
+        executionTimeMillisEstimate: 0,
+        works: 5,
+        advanced: 4,
+        needTime: 0,
+        needYield: 0,
+        saveState: 0,
+        restoreState: 0,
+        isEOF: 1,
+        nss: 'Vitcampus.sales',
+        keyPattern: {
+          item: 1
+        },
+        indexName: 'item_1',
+        isMultiKey: false,
+        multiKeyPaths: {
+          item: []
+        },
+        isUnique: false,
+        isSparse: false,
+        isPartial: false,
+        indexVersion: 2,
+        direction: 'forward',
+        indexBounds: {
+          item: [
+            '["Americanos", "Americanos"]'
+          ]
+        },
+        keysExamined: 4,
+        seeks: 1,
+        dupsTested: 0,
+        dupsDropped: 0,
+        peakTrackedMemBytes: 0
+      }
+    }
+  },
+  queryShapeHash: '6240B3D70E9934F45B9E14D6A8E8C3999EEB06C64909A21019ECB8D80E204DFD',
+  command: {
+    find: 'sales',
+    filter: {
+      item: 'Americanos'
+    },
+    '$db': 'Vitcampus'
+  },
+  serverInfo: {
+    host: 'Aditi2006',
+    port: 27017,
+    version: '8.3.2',
+    gitVersion: '89f54eb32e217d2f7bfcad50e5919f3033bb9611'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalQueryFrameworkControl: 'trySbeRestricted',
+    internalQueryPlannerIgnoreIndexWithCollationForRegex: 1
+  },
+  ok: 1
+}
+db.users.insertMany([
+   { email:  "john@test.com", name: "john"},
+   { email:  "jane@test.com", name: "jane"},
+]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6a241eb9c597ba82e46948da'),
+    '1': ObjectId('6a241eb9c597ba82e46948db')
+  }
+}
+db.users.createIndex({email:1},{unique:true});
+email_1
+db.users.insertOne(
+   { email:  "john@test.com", name: "johny"}
+);
+MongoServerError: E11000 duplicate key error collection: Vitcampus.users index: email_1 dup key: { email: "john@test.com" }
+db.users.drop()
+true
+db.users.insertMany([
+   { email:  "john@test.com", name: "john"},
+   { email:  "john@test.com", name: "johny"},
+   { email:  "jane@test.com", name: "jane"},
+])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6a241f0bc597ba82e46948dd'),
+    '1': ObjectId('6a241f0bc597ba82e46948de'),
+    '2': ObjectId('6a241f0bc597ba82e46948df')
+  }
+}
+db.users.createIndex({email: 1},{unique:true})
+MongoServerError[DuplicateKey]: Index build failed: c7fb5c36-cced-460d-baf2-b01c39bba176: Collection Vitcampus.users ( 64ae8715-ae76-4c96-b1bc-bcc5a2119e1d ) :: caused by :: E11000 duplicate key error collection: Vitcampus.users index: email_1 dup key: { email: "john@test.com" }
+db.users.deleteOne({name:'johny', email: 'john@test.com'});
+{
+  acknowledged: true,
+  deletedCount: 1
+}
+db.users.createIndex({email: 1},{unique:true})
+email_1
+db.locations.insertOne({
+	address: "Downtown San Jose, CA, USA",
+	lat: 37.335480,
+	long: -121.893028
+})
+{
+  acknowledged: true,
+  insertedId: ObjectId('6a241fa2c597ba82e46948e0')
+}
+db.locations.createIndex({
+	lat: 1,
+	long: 1
+},{ unique: true });
+lat_1_long_1
+db.locations.insertOne({
+	address: "Dev Bootcamp, San Jose, CA, USA",
+	lat: 37.335480,
+	long: -122.893028
+})
+{
+  acknowledged: true,
+  insertedId: ObjectId('6a241fe5c597ba82e46948e1')
+}
+db.locations.insertOne({
+	address: "Central San Jose, CA, USA",
+	lat: 37.335480,
+	long: -121.893028
+})
+MongoServerError: E11000 duplicate key error collection: Vitcampus.locations index: lat_1_long_1 dup key: { lat: 37.33548, long: -121.893028 }
+db.locations.createIndex({
+	lat: 1,
+	long: 1
+})
+MongoServerError[IndexKeySpecsConflict]: An existing index has the same name as the requested index. When index names are not specified, they are auto generated and can cause conflicts. Please refer to our documentation. Requested index: { v: 2, key: { lat: 1, long: 1 }, name: "lat_1_long_1" }, existing index: { v: 2, unique: true, key: { lat: 1, long: 1 }, name: "lat_1_long_1" }
+db.locations.drop()
+true
+db.locations.insertOne({
+	address: "Downtown San Jose, CA, USA",
+	lat: 37.335480,
+	long: -121.893028
+})
+{
+  acknowledged: true,
+  insertedId: ObjectId('6a242539c597ba82e46948e3')
+}
+db.locations.createIndex({
+	lat: 1,
+	long: 1
+})
+lat_1_long_1
+db.locations.find({address: /San/gi, lat: 37.335480}).explain('executionStats')
+BSONError: The regular expression option [g] is not supported
+db.locations.find({address: /San/, lat: 37.335480}).explain('executionStats')
+{
+        isUnique: false,
+        isSparse: false,
+        isPartial: false,
+        indexVersion: 2,
+        direction: 'forward',
+        indexBounds: {
+          lat: [
+            '[37.33548, 37.33548]'
+          ],
+          long: [
+            '[MinKey, MaxKey]'
+          ]
+        },
+        keysExamined: 1,
+        seeks: 1,
+        dupsTested: 0,
+        dupsDropped: 0,
+        peakTrackedMemBytes: 0
+      }
+    }
+  },
+  queryShapeHash: 'B1E8DAFD4E6720B4065CB504F849D5AF689807D5DF6EEF09EDB5B988332CCFD8',
+  command: {
+    find: 'locations',
+    filter: {
+      address: BSONRegExp('San', ''),
+      lat: 37.33548
+    },
+    '$db': 'Vitcampus'
+  },
+  serverInfo: {
+    host: 'Aditi2006',
+    port: 27017,
+    version: '8.3.2',
+    gitVersion: '89f54eb32e217d2f7bfcad50e5919f3033bb9611'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalQueryFrameworkControl: 'trySbeRestricted',
+    internalQueryPlannerIgnoreIndexWithCollationForRegex: 1
+  },
+  ok: 1
+}
+db.locations.find({address: /San/}).explain('executionStats')
+{
+    nReturned: 1,
+    executionTimeMillis: 2,
+    totalKeysExamined: 0,
+    totalDocsExamined: 1,
+    executionStages: {
+      isCached: false,
+      stage: 'COLLSCAN',
+      filter: {
+        address: BSONRegExp('San', '')
+      },
+      nReturned: 1,
+      executionTimeMillisEstimate: 0,
+      works: 2,
+      advanced: 1,
+      needTime: 0,
+      needYield: 0,
+      saveState: 0,
+      restoreState: 0,
+      isEOF: 1,
+      nss: 'Vitcampus.locations',
+      direction: 'forward',
+      docsExamined: 1
+    }
+  },
+  queryShapeHash: '991AB882C5F68C4F6A5A478664CE574215A0B09D9E4BAE0B8AF850BE861A7B06',
+  command: {
+    find: 'locations',
+    filter: {
+      address: BSONRegExp('San', '')
+    },
+    '$db': 'Vitcampus'
+  },
+  serverInfo: {
+    host: 'Aditi2006',
+    port: 27017,
+    version: '8.3.2',
+    gitVersion: '89f54eb32e217d2f7bfcad50e5919f3033bb9611'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalQueryFrameworkControl: 'trySbeRestricted',
+    internalQueryPlannerIgnoreIndexWithCollationForRegex: 1
+  },
+  ok: 1
+}
+db.locations.find({lat: 37.335480}).explain('executionStats')
+{
+        nReturned: 1,
+        executionTimeMillisEstimate: 0,
+        works: 2,
+        advanced: 1,
+        needTime: 0,
+        needYield: 0,
+        saveState: 0,
+        restoreState: 0,
+        isEOF: 1,
+        nss: 'Vitcampus.locations',
+        keyPattern: {
+          lat: 1,
+          long: 1
+        },
+        indexName: 'lat_1_long_1',
+        isMultiKey: false,
+        multiKeyPaths: {
+          lat: [],
+          long: []
+        },
+        isUnique: false,
+        isSparse: false,
+        isPartial: false,
+        indexVersion: 2,
+        direction: 'forward',
+        indexBounds: {
+          lat: [
+            '[37.33548, 37.33548]'
+          ],
+          long: [
+            '[MinKey, MaxKey]'
+          ]
+        },
+        keysExamined: 1,
+        seeks: 1,
+        dupsTested: 0,
+        dupsDropped: 0,
+        peakTrackedMemBytes: 0
+      }
+    }
+  },
+  queryShapeHash: '56215E762154BDEA72B187A0CD4682888ED271C26BDD38E49EB7726BC89B31CC',
+  command: {
+    find: 'locations',
+    filter: {
+      lat: 37.33548
+    },
+    '$db': 'Vitcampus'
+  },
+  serverInfo: {
+    host: 'Aditi2006',
+    port: 27017,
+    version: '8.3.2',
+    gitVersion: '89f54eb32e217d2f7bfcad50e5919f3033bb9611'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalQueryFrameworkControl: 'trySbeRestricted',
+    internalQueryPlannerIgnoreIndexWithCollationForRegex: 1
+  },
+  ok: 1
+}
+db.locations.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { lat: 1, long: 1 }, name: 'lat_1_long_1' }
+]
+db.loacations.dropIndex('lat_1_long_1')
+MongoServerError[NamespaceNotFound]: ns not found Vitcampus.loacations
+db.locations.dropIndex('lat_1_long_1')
+{ nIndexesWas: 2, ok: 1 }
+db.locations.getIndexes()
+[ { v: 2, key: { _id: 1 }, name: '_id_' } ]
+show collections
+locations
+products
+sales
+users
+db.users.find()
+{
+  _id: ObjectId('6a241f0bc597ba82e46948dd'),
+  email: 'john@test.com',
+  name: 'john'
+}
+{
+  _id: ObjectId('6a241f0bc597ba82e46948df'),
+  email: 'jane@test.com',
+  name: 'jane'
+}
+db.users.createIndex({email: -1})
+email_-1
+db.users.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { email: 1 }, name: 'email_1', unique: true },
+  { v: 2, key: { email: -1 }, name: 'email_-1' }
+]
+db.users.dropIndex({ email: -1 });
+{ nIndexesWas: 3, ok: 1 }
+db.users.createIndex({email: -1})
+email_-1
+db.users.dropIndexes()
+{
+  nIndexesWas: 3,
+  msg: 'non-_id indexes dropped for collection',
+  ok: 1
+}
+db.users.getIndex()
+TypeError: db.users.getIndex is not a function
+db.users.getIndexes()
+[ { v: 2, key: { _id: 1 }, name: '_id_' } ]
+
+
+
